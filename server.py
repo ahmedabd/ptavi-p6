@@ -1,8 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-"""
-Clase (y programa principal) para un servidor de eco en UDP simple
-"""
+
 
 import socketserver
 import sys
@@ -18,7 +16,7 @@ except IndexError:
 
 class EchoHandler(socketserver.DatagramRequestHandler):
     """
-    Echo server class
+    Recibimos las peticiones SIP y para cada caso enviamos al cliente un mensaje o servicio
     """
 
     def handle(self):
@@ -41,16 +39,15 @@ class EchoHandler(socketserver.DatagramRequestHandler):
 
             elif linea_lista[0] == 'BYE':
                 self.wfile.write(b'SIP/2.0 200 OK' + b'\r\n')
-                print('Finalizando...')
 
             elif linea_lista[0] != 'INVITE' or 'ACK' or 'BYE':
-                self.wfile.write(b'Method Not Allowed')
+                self.wfile.write(b'SIP/2.0 Method Not Allowed' + b'\r\n')
 
             else:
-                self.wfile.write(b'Bad Request')
+                self.wfile.write(b'SIP/2.0 Bad Request' + b'\r\n')
 
 if __name__ == "__main__":
     # Creamos servidor de eco y escuchamos
-    serv = socketserver.UDPServer(('', 6001), EchoHandler)
+    serv = socketserver.UDPServer((IP, PUERTO), EchoHandler)
     print("Listening...")
     serv.serve_forever()
