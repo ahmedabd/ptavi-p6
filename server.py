@@ -14,6 +14,7 @@ try:
 except IndexError:
     sys.exit('Usage: python3 server.py IP port audio_file')
 
+
 class EchoHandler(socketserver.DatagramRequestHandler):
     """
     Recibimos las peticiones SIP y para cada caso enviamos al cliente un mensaje o servicio
@@ -28,7 +29,6 @@ class EchoHandler(socketserver.DatagramRequestHandler):
             print("El cliente nos manda " + line.decode('utf-8'))
             if not line:
                 break
-            
             if linea_lista[0] == 'INVITE':
                 self.wfile.write(b'\r\n' + b'SIP/2.0 100 Trying' + b'\r\n' + b'SIP/2.0 180 Ring' + b'\r\n' + b'SIP/2.0 200 OK' + b'\r\n')
 
