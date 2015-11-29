@@ -30,8 +30,18 @@ my_socket.connect((IP_RECEPTOR, PUERTO_RECEPTOR))
 print("Enviando: " + LINE)
 my_socket.send(bytes(LINE, 'utf-8') + b'\r\n')
 data = my_socket.recv(1024)
+datos = data.decode('utf-8')
+print('Recibido -- ', datos)
+datos_lista = datos.split('\r\n')
 
-print('Recibido -- ', data.decode('utf-8'))
+if datos_lista[1:4] == ['SIP/2.0 100 Trying', 'SIP/2.0 180 Ring', 'SIP/2.0 200 OK']:
+    LINEA_ACK = 'ACK' + ' ' + 'sip:' + RECEPTOR + '@' + IP_RECEPTOR + ' ' + 'SIP/2.0'
+    print('Enviando: ' + LINEA_ACK)
+    my_socket.send(bytes(LINEA_ACK, 'utf-8') + b'\r\n')
+    data = my_socket.recv(1024)
+    datos = data.decode('utf-8')
+
+print('Recibido -- ', datos)
 print("Terminando socket...")
 
 # Cerramos todo
