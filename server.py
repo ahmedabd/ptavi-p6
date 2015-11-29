@@ -21,16 +21,31 @@ class EchoHandler(socketserver.DatagramRequestHandler):
     """
 
     def handle(self):
-        # Escribe dirección y puerto del cliente (de tupla client_address)
-        self.wfile.write(b"Hemos recibido tu peticion")
         while 1:
-            # Leyendo línea a línea lo que nos envía el cliente
             line = self.rfile.read()
-            print("El cliente nos manda " + line.decode('utf-8'))
+            linea = line.decode('utf-8')
+            linea_lista = linea.split()
+            print(linea_lista)
 
-            # Si no hay más líneas salimos del bucle infinito
+            print("El cliente nos manda " + line.decode('utf-8'))
             if not line:
                 break
+            
+            if linea_lista[0] == 'INVITE':
+                self.wfile.write(b'\r\n' + b'SIP/2.0 100 Trying' + b'\r\n' + b'SIP/2.0 180 Ring' + b'\r\n' + b'SIP/2.0 200 OK' + b'\r\n')
+
+            elif linea_lista[0] == 'ACK':
+                pass
+
+            elif linea_lista[0] == 'BYE':
+                self.wfile.write(b'SIP/2.0 200 OK')
+                print('Finalizando...')
+
+            elif linea_lista[0] != 'INVITE' or 'ACK' or 'BYE':
+                self.wfile.write(b'Method Not Allowed')
+
+            else:
+                self.wfile.write(b'Bad Request')
 
 if __name__ == "__main__":
     # Creamos servidor de eco y escuchamos
