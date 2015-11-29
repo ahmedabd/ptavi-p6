@@ -20,7 +20,7 @@ except IndexError:
 
 
 # Contenido que vamos a enviar
-LINE = '¡Hola mundo!'
+LINE = METODO + ' ' + 'sip:' + RECEPTOR + '@' + IP_RECEPTOR + ' ' + 'SIP/2.0'
 
 # Creamos el socket, lo configuramos y lo atamos a un servidor/puerto
 my_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
