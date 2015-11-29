@@ -7,8 +7,6 @@ Cliente SIP
 import socket
 import sys
 
-
-
 try:
     sys.argv[0] = 'client.py'
     METODO = sys.argv[1]
