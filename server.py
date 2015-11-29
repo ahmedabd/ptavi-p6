@@ -6,6 +6,7 @@ Clase (y programa principal) para un servidor de eco en UDP simple
 
 import socketserver
 import sys
+import os
 
 try:
     sys.argv[0] = 'server.py'
@@ -25,7 +26,6 @@ class EchoHandler(socketserver.DatagramRequestHandler):
             line = self.rfile.read()
             linea = line.decode('utf-8')
             linea_lista = linea.split()
-            print(linea_lista)
 
             print("El cliente nos manda " + line.decode('utf-8'))
             if not line:
@@ -35,10 +35,12 @@ class EchoHandler(socketserver.DatagramRequestHandler):
                 self.wfile.write(b'\r\n' + b'SIP/2.0 100 Trying' + b'\r\n' + b'SIP/2.0 180 Ring' + b'\r\n' + b'SIP/2.0 200 OK' + b'\r\n')
 
             elif linea_lista[0] == 'ACK':
-                pass
+                aEjecutar = './mp32rtp -i' + IP + 'p 23032 < ' + FICHERO_AUDIO
+                print('Vamos a ejecutar', aEjecutar)
+                os.system(aEjecutar)
 
             elif linea_lista[0] == 'BYE':
-                self.wfile.write(b'SIP/2.0 200 OK')
+                self.wfile.write(b'SIP/2.0 200 OK' + b'\r\n')
                 print('Finalizando...')
 
             elif linea_lista[0] != 'INVITE' or 'ACK' or 'BYE':
