@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 """
-Programa cliente que abre un socket a un servidor
+Cliente SIP
 """
 
 import socket
@@ -20,7 +20,7 @@ except IndexError:
 
 
 # Contenido que vamos a enviar
-LINE = METODO + ' ' + 'sip:' + RECEPTOR + '@' + IP_RECEPTOR + ' ' + 'SIP/2.0'
+LINE = METODO + ' ' + 'sip' + ':' + RECEPTOR + '@' + IP_RECEPTOR + ' ' + 'SIP/2.0'
 
 # Creamos el socket, lo configuramos y lo atamos a un servidor/puerto
 my_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -35,15 +35,15 @@ print('Recibido -- ', datos)
 datos_lista = datos.split('\r\n')
 
 if datos_lista[1:4] == ['SIP/2.0 100 Trying', 'SIP/2.0 180 Ring', 'SIP/2.0 200 OK']:
-    LINEA_ACK = 'ACK' + ' ' + 'sip:' + RECEPTOR + '@' + IP_RECEPTOR + ' ' + 'SIP/2.0'
+    LINEA_ACK = 'ACK' + ' ' + 'sip' + ':' + RECEPTOR + '@' + IP_RECEPTOR + ' ' + 'SIP/2.0'
     print('Enviando: ' + LINEA_ACK)
     my_socket.send(bytes(LINEA_ACK, 'utf-8') + b'\r\n')
     data = my_socket.recv(1024)
     datos = data.decode('utf-8')
+    print('Recibido -- ', datos)
 
-print('Recibido -- ', datos)
-print("Terminando socket...")
 
 # Cerramos todo
+print("Terminando socket...")
 my_socket.close()
 print("Fin.")
