@@ -18,7 +18,7 @@ except IndexError:
 
 
 # Contenido que vamos a enviar
-LINE = METODO + ' ' + 'sip' + ':' + RECEPTOR + '@' + IP_RECEPTOR + ' ' + 'SIP/2.0'
+LINE = METODO + ' ' + 'sip:' + RECEPTOR + '@' + IP_RECEPTOR + ' ' + 'SIP/2.0'
 
 # Creamos el socket, lo configuramos y lo atamos a un servidor/puerto
 my_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -30,12 +30,13 @@ my_socket.send(bytes(LINE, 'utf-8') + b'\r\n')
 data = my_socket.recv(1024)
 datos = data.decode('utf-8')
 print('Recibido -- ', datos)
-datos_lista = datos.split('\r\n')
+datos_lista = datos.split('\r\n\r\n')
+RCV = datos_lista[0:3]
 
-if datos_lista[1:4] == ['SIP/2.0 100 Trying', 'SIP/2.0 180 Ring', 'SIP/2.0 200 OK']:
-    LINEA_ACK = 'ACK' + ' ' + 'sip' + ':' + RECEPTOR + '@' + IP_RECEPTOR + ' ' + 'SIP/2.0'
-    print('Enviando: ' + LINEA_ACK)
-    my_socket.send(bytes(LINEA_ACK, 'utf-8') + b'\r\n')
+if RCV == ['SIP/2.0 100 Trying', 'SIP/2.0 180 Ring', 'SIP/2.0 200 OK']:
+    ACK = 'ACK' + ' ' + 'sip:' + RECEPTOR + '@' + IP_RECEPTOR + ' ' + 'SIP/2.0'
+    print('Enviando: ' + ACK)
+    my_socket.send(bytes(ACK, 'utf-8') + b'\r\n')
     data = my_socket.recv(1024)
     datos = data.decode('utf-8')
     print('Recibido -- ', datos)
